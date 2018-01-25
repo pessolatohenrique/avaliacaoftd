@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\MaskedInput;
+use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 
 ?>
@@ -15,11 +16,24 @@ use kartik\select2\Select2;
     ]); ?>
 
     <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="col-lg-3 col-md-3 col-sm-6">
             <?= $form->field($model, 'fullName') ?>
         </div> 
 
-        <div class="col-lg-4 col-md-4 col-sm-6">
+        <div class="col-lg-3 col-md-3 col-sm-6">
+            <?=$form->field($model, 'department')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map($departments, 'dept_no', 'dept_name'),
+                'options' => [
+                    'placeholder' => 'Selecione o departamento'
+                ],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+                'theme' => Select2::THEME_DEFAULT,
+            ])->label("Departamento");?>
+        </div> 
+
+        <div class="col-lg-3 col-md-3 col-sm-6">
             <?=$form->field($model, 'gender')->widget(Select2::classname(), [
                 'data' => Yii::$app->params['gender'],
                 'options' => [
@@ -32,7 +46,7 @@ use kartik\select2\Select2;
             ]);?>
         </div>
 
-        <div class="col-lg-4 col-md-4 col-sm-6">
+        <div class="col-lg-3 col-md-3 col-sm-6">
             <?= $form->field($model, 'birth_date')->widget(MaskedInput::className(), [
                 'mask' => '99/99/9999',
             ]) ?>   

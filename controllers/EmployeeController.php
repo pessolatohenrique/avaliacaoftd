@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\Employee;
 use app\models\EmployeeSearch;
+use app\models\DeptoEmpregado;
+use app\models\Department;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -41,6 +43,7 @@ class EmployeeController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'departments' => Department::find()->all()
         ]);
     }
 
@@ -52,8 +55,11 @@ class EmployeeController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'managers' => $model->getManagers()
         ]);
     }
 

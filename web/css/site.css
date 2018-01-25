@@ -102,6 +102,29 @@ a.desc:after {
     padding-bottom: 1em;
 }
 
+.box-body > ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+.box-center {
+    width: 100%;
+    text-align: center;
+}
+
+.label-title {
+    color: #3c8dbc;
+    margin-top: 1em;
+    display: block;
+}
+
+.font-box {
+    font-size: 1.1em;
+}
+
+.list-space {
+    padding-bottom: 1em;
+}
 /**
  * visualizacao smartphone
  * @param max-width:767px 

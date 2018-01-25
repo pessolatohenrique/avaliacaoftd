@@ -17,7 +17,8 @@ if (strlen($searchModel->birth_date) == 10) {
     <div class="box box-primary">
         <div class="box-body">
             <?php echo $this->render('_search', [
-                'model' => $searchModel
+                'model' => $searchModel,
+                'departments' => $departments
             ]); ?>
             <p>
                 

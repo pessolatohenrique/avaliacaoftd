@@ -63,7 +63,7 @@ class Department extends \yii\db\ActiveRecord
      */
     public function getEmpNos()
     {
-        return $this->hasMany(Employees::className(), ['emp_no' => 'emp_no'])->viaTable('dept_emp', ['dept_no' => 'dept_no']);
+        return $this->hasMany(Employee::className(), ['emp_no' => 'emp_no'])->viaTable('dept_emp', ['dept_no' => 'dept_no']);
     }
 
     /**
@@ -79,6 +79,6 @@ class Department extends \yii\db\ActiveRecord
      */
     public function getEmpNos0()
     {
-        return $this->hasMany(Employees::className(), ['emp_no' => 'emp_no'])->viaTable('dept_manager', ['dept_no' => 'dept_no']);
+        return $this->hasMany(Employee::className(), ['emp_no' => 'emp_no'])->viaTable('dept_manager', ['dept_no' => 'dept_no']);
     }
 }

@@ -72,7 +72,27 @@ class Employee extends \yii\db\ActiveRecord
     public function afterFind()
     {
         $this->birth_date = DateHelper::toBrazilian($this->birth_date);
+        $this->hire_date = DateHelper::toBrazilian($this->hire_date);
         $this->gender = Yii::$app->params['gender'][$this->gender];
+    }
+
+    /**
+     * obtém a lista de gestores de um departamento no qual o funcionário pesquisado trabalha
+     * @return String lista dos gestores encontrados
+     */
+    public function getManagers()
+    {
+        $strManager = "";
+
+        foreach ($this->deptEmps as $department) {
+            $managers_search = $department->deptNo->deptManagers;
+            foreach ($managers_search as $manager) {
+                $strManager .= $manager->empNo->fullName.", ";
+            }
+        }
+        $strManager = substr(trim($strManager), 0, -1);
+        
+        return $strManager;
     }
 
     /**
@@ -120,7 +140,7 @@ class Employee extends \yii\db\ActiveRecord
      */
     public function getTitles()
     {
-        return $this->hasMany(Titles::className(), ['emp_no' => 'emp_no']);
+        return $this->hasMany(Title::className(), ['emp_no' => 'emp_no']);
     }
 
     /**

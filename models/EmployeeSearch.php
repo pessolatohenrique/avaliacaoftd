@@ -15,6 +15,7 @@ use app\components\DateHelper;
 class EmployeeSearch extends Employee
 {
     public $fullName;
+    public $department;
     /**
      * @inheritdoc
      */
@@ -22,7 +23,7 @@ class EmployeeSearch extends Employee
     {
         return [
             [['emp_no'], 'integer'],
-            [['birth_date', 'first_name', 'last_name', 'gender', 'hire_date', 'fullName'], 'safe'],
+            [['birth_date', 'first_name', 'last_name', 'gender', 'hire_date', 'fullName', 'department'], 'safe'],
         ];
     }
 
@@ -66,14 +67,37 @@ class EmployeeSearch extends Employee
             return $dataProvider;
         }
 
-        $this->fullName = trim($this->fullName);
-        $this->birth_date = DateHelper::toAmerican($this->birth_date);
+        $query = $this->searchByFullName($query);
 
-        $query->orFilterWhere(['like', 'first_name', $this->fullName])
-            ->orFilterWhere(['like', 'last_name', $this->fullName])
-            ->andFilterWhere(['gender' => $this->gender])
-            ->andFilterWhere(['birth_date' => $this->birth_date]);
+        $query->andFilterWhere(['gender' => $this->gender])
+            ->andFilterWhere(['birth_date' => $this->birth_date])
+            ->andFilterWhere(['dept_emp.dept_no' => $this->department]);
 
         return $dataProvider;
+    }
+
+    /**
+     * verifica se apenas um dos nomes foi preenchido ou se o nome completo (nome + sobrenome) foi preenchido para realizar a busca
+     * @param Object $query query que está sendo construída durante a pesquisa 
+     * @return Object $query nova query após verificações
+     */
+    public function searchByFullName($query)
+    {
+        $this->fullName = trim($this->fullName);
+        $this->birth_date = DateHelper::toAmerican($this->birth_date);
+        
+        $fullName_explode = explode(" ", $this->fullName);
+        $first_name = isset($fullName_explode[0])?$fullName_explode[0]:'';
+        $last_name = isset($fullName_explode[1])?$fullName_explode[1]:'';;
+
+        if ($first_name != "" && $last_name != "") {
+            $query->andFilterWhere(['like', 'first_name', $first_name]);
+            $query->andFilterWhere(['like', 'last_name', $last_name]);
+        } else {
+            $query->orFilterWhere(['like', 'first_name', $first_name]);
+            $query->orFilterWhere(['like', 'last_name', $first_name]);
+        }
+
+        return $query;
     }
 }
