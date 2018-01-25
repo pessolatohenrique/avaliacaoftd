@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use yii\data\ArrayDataProvider;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\User;
@@ -14,6 +15,7 @@ use app\models\SignupForm;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\EmployeeSearch;
+use app\models\DeptoEmpregado;
 
 class SiteController extends Controller
 {
@@ -91,10 +93,17 @@ class SiteController extends Controller
         }else{
             $searchModel = new EmployeeSearch();
             $dataProvider = $searchModel->searchBirthday(Yii::$app->request->queryParams);
+            $department_employee = DeptoEmpregado::groupByDepartment();
+
+            $departmentProvider = new ArrayDataProvider([
+                'allModels' => $department_employee
+            ]);
 
             return $this->render('index', [
                 'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider
+                'dataProvider' => $dataProvider,
+                'departmentProvider' => $departmentProvider,
+                'departmentChart' => DeptoEmpregado::prepareChart($department_employee)
             ]);
         }
         

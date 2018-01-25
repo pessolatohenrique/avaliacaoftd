@@ -1,31 +1,31 @@
 <?php
 
-use yii\grid\GridView;
 $this->title = 'Dashboard';
+
 ?>
 
 <div class="site-index">
-	<div class="box box-primary">
-	    <div class="box-header">
-	        <h3 class="box-title">
-	        	Aniversariantes do dia
-	        </h3>
-	    </div>
-	    <div class="box-body">
-            <?= GridView::widget([
-                'dataProvider' => $dataProvider,
-                'options' => ['class' => 'table-responsive'],
-                'columns' => [
 
-                    'fullName',
-                    'gender',
-                    'birth_date',
-                    [
-                    	'class' => 'yii\grid\ActionColumn',
-                    	'template' => '{view}'
-                    ],
-                ],
-            ]); ?>
-	    </div>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <?=$this->render('_department-chart', [
+                'dataProvider' => $departmentProvider,
+                'departmentChart' => $departmentChart
+            ])?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <?=$this->render('_departments', [
+                'dataProvider' => $departmentProvider
+             ])?>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <?=$this->render('_birthday', [
+                'dataProvider' => $dataProvider
+             ])?>
+        </div>
+    </div>
+
+
 </div>

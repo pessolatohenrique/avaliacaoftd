@@ -18,6 +18,8 @@ use app\components\DateHelper;
  */
 class DeptoEmpregado extends \yii\db\ActiveRecord
 {
+    public $total_group; //atributo que armazena total agrupado
+    public $dept_group_name; //atributo que armazena nome agrupado
     /**
      * @inheritdoc
      */
@@ -49,7 +51,43 @@ class DeptoEmpregado extends \yii\db\ActiveRecord
             'dept_no' => 'Dept No',
             'from_date' => 'From Date',
             'to_date' => 'To Date',
+            'total_group' => 'Total'
         ];
+    }
+
+    /**
+     * mostra o total de funcionários por departamento
+     * @return Array $total_group total de funcionários por departamento
+     */
+    public function groupByDepartment()
+    {
+        $total_group = self::find()
+        ->select(['*', 'COUNT(*) AS total_group', 'dept_name AS dept_group_name'])
+        ->joinWith('deptNo')
+        ->groupBy(['dept_emp.dept_no'])
+        ->orderBy('departments.dept_name','ASC')
+        ->all();
+    
+        return $total_group;
+    }
+
+    /**
+     * realiza agrupamento para gerar um gráfico
+     * @param Array $department_employee resultado encontrado na pesquisa
+     * @return Array $chart array com dados para gráfico
+     */
+    public function prepareChart($department_employee)
+    {
+        $chart = array();
+
+        foreach ($department_employee as $department) {
+            $array_tmp = array();
+            $array_tmp['name'] = $department->dept_group_name;
+            $array_tmp['data'] = array(intval($department->total_group));
+            array_push($chart, $array_tmp);
+        }
+
+        return $chart;
     }
 
     /**
@@ -65,7 +103,6 @@ class DeptoEmpregado extends \yii\db\ActiveRecord
         foreach ($relations as $key => $relation) {
              $relation->delete();
         }
-
     }
     
     /**

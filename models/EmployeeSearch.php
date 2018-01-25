@@ -122,7 +122,10 @@ class EmployeeSearch extends Employee
                 'defaultOrder' => [
                     'first_name' => SORT_ASC
                 ]
-            ]
+            ],
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
 
         $this->load($params);
