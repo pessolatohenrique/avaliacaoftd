@@ -7,6 +7,7 @@ use app\models\Employee;
 use app\models\EmployeeSearch;
 use app\models\DeptoEmpregado;
 use app\models\Department;
+use app\models\Title;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -71,13 +72,16 @@ class EmployeeController extends Controller
     public function actionCreate()
     {
         $model = new Employee();
+        $model->getNextId();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->emp_no]);
+            \Yii::$app->getSession()->setFlash('feedback', 'Informações gerais salvas com sucesso! Navegue entre as abas para preencher mais informações');
+
+            return $this->redirect(['update', 'id' => $model->emp_no]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model' => $model
         ]);
     }
 
@@ -93,7 +97,8 @@ class EmployeeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->emp_no]);
+            \Yii::$app->getSession()->setFlash('feedback', 'Informações gerais salvas com sucesso! Navegue entre as abas para preencher mais informações');
+            return $this->redirect(['update', 'id' => $model->emp_no]);
         }
 
         return $this->render('update', [
@@ -113,6 +118,56 @@ class EmployeeController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * realiza a associação entre departamentos e funcionários (tabela dept_emp)
+     * @return void
+     */
+    public function actionCreateDepartments()
+    {
+        $post = Yii::$app->request->post();
+        
+        $delete = DeptoEmpregado::deleteRelation($post['emp_no']);
+
+        $insert = DeptoEmpregado::insertBatch($post);
+
+        if ($insert > 0) {
+            \Yii::$app->getSession()->setFlash('feedback', 'Informações gerais salvas com sucesso! Navegue entre as abas para preencher mais informações');
+
+            \Yii::$app->getSession()->setFlash('feedback_warning', 'Visualize a tela de visualização do colaborador para verificar os departamentos salvos');
+
+            return $this->redirect(['update', 'id' => $post['emp_no']]);
+        }
+
+        \Yii::$app->getSession()->setFlash('feedback_error', 'Algo de errado ocorreu ao salvar as informações');
+
+        return $this->redirect(['update', 'id' => $post['emp_no']]);
+    }
+
+    /**
+     * realiza a associação entre títulos e funcionários (tabela titles)
+     * @return void
+     */
+    public function actionCreateTitle()
+    {
+        $post = Yii::$app->request->post();
+        
+        $delete = Title::deleteRelation($post['emp_no']);
+
+        $insert = Title::insertBatch($post);
+
+        if ($insert > 0) {
+            \Yii::$app->getSession()->setFlash('feedback', 'Informações gerais salvas com sucesso! Navegue entre as abas para preencher mais informações');
+
+            \Yii::$app->getSession()->setFlash('feedback_warning', 'Visualize a tela de visualização do colaborador para verificar os títulos salvos');
+
+            return $this->redirect(['update', 'id' => $post['emp_no']]);
+        }
+
+        \Yii::$app->getSession()->setFlash('feedback_error', 'Algo de errado ocorreu ao salvar as informações');
+
+        return $this->redirect(['update', 'id' => $post['emp_no']]);
     }
 
     /**

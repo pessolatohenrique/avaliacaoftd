@@ -1,21 +1,38 @@
 <?php
 
 use yii\helpers\Html;
+use yii\bootstrap\Tabs;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Employee */
+$this->title = 'Atualizar colaborador: '.$model->fullName ;
+$this->params['breadcrumbs'][] = ['label' => 'Colaboradores', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 
-$this->title = 'Update Employee: {nameAttribute}';
-$this->params['breadcrumbs'][] = ['label' => 'Employees', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->emp_no, 'url' => ['view', 'id' => $model->emp_no]];
-$this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="employee-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+<div class="employee-create">
+    <?php
+        echo Tabs::widget([
+            'items' => [
+                [
+                    'label' => Yii::t('app', 'Informações Gerais'),
+                    'content' => $this->render('_form', [
+                    	'model' => $model                    
+                    ]),
+                    'active' => true
+                ],
+                [
+                    'label' => Yii::t('app', 'Departamentos'),
+                    'content' => $this->render('create-departments', [
+                    	'model' => $model
+                    ])
+                ],
+                [
+                    'label' => Yii::t('app', 'Títulos'),
+                    'content' => $this->render('create-title', [
+                        'model' => $model
+                    ])
+                ],
+            ],
+        ]);
+    ?>
 
 </div>

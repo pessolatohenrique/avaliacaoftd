@@ -1,21 +1,26 @@
 <?php
 
 use yii\helpers\Html;
+use yii\bootstrap\Tabs;
 
-
-/* @var $this yii\web\View */
-/* @var $model app\models\Employee */
-
-$this->title = 'Create Employee';
-$this->params['breadcrumbs'][] = ['label' => 'Employees', 'url' => ['index']];
+$this->title = 'Adicionar novo colaborador';
+$this->params['breadcrumbs'][] = ['label' => 'Colaboradores', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="employee-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    <?php
+        echo Tabs::widget([
+            'items' => [
+                [
+                    'label' => Yii::t('app', 'Informações Gerais'),
+                    'content' => $this->render('_form', [
+                    	'model' => $model                    
+                    ]),
+                    'active' => true
+                ]
+            ],
+        ]);
+    ?>
 
 </div>

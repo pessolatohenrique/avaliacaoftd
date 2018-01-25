@@ -7,5 +7,9 @@ return [
     'gender' => [
     	'M' => 'Masculino',
     	'F' => 'Feminino'
+    ],
+    'gender_text' => [
+    	'Masculino' => 'M',
+    	'Feminino' => 'F'
     ]
 ];

@@ -125,6 +125,10 @@ a.desc:after {
 .list-space {
     padding-bottom: 1em;
 }
+
+.custom-tab {
+    padding: 2em;
+}
 /**
  * visualizacao smartphone
  * @param max-width:767px 

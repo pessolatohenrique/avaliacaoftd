@@ -65,6 +65,63 @@ class Title extends \yii\db\ActiveRecord
         }
 
     }
+
+    /**
+     * realiza a exclusão de títulos de um usuário, de modo a permitir adicionar novos
+     * feito desta maneira pela estrutura de tabela dinâmica
+     * @param Integer $emp_no ID do colaborador 
+     * @return boolean $excluiu flag informando se exclusão ocorreu
+     */
+    public function deleteRelation($emp_no) {
+        $titulos = self::find()->where(['emp_no' => $emp_no])->all();
+        
+        foreach ($titulos as $titulo) {
+            $titulo->delete();
+        }
+
+        return 1;
+    }
+
+    /**
+     * realiza a inserção na tabela titles em lote
+     * ou seja, recebe um array e preenche a tabela com vários registros de acordo com este array
+     * @param Array $params lista com parâmetros 
+     * @return boolean $inseriu flag dizendo se inseriu ou não
+     */
+    public function insertBatch($params)
+    {
+        $employee = $params['Employee'];
+        $department = $employee['title_create'];
+        $array_save = array();
+
+        for ($i =0; $i < count($department); $i++) {
+            $array_tmp = array();
+            $array_tmp[0] = $params['emp_no'];
+            $array_tmp[1] = $employee['title_create'][$i];
+            
+            if ($employee['title_from'][$i] != "") {
+                $array_tmp[2] = DateHelper::toAmerican($employee['title_from'][$i]);
+            } else {
+                $array_tmp[2] = date("Y-m-d");
+            }
+           
+            if ($employee['title_to'][$i] != "") {
+                $array_tmp[3] = DateHelper::toAmerican($employee['title_to'][$i]);
+            } else {
+                $array_tmp[3] = date("Y-m-d");
+            }
+            
+            array_push($array_save, $array_tmp);
+        }   
+
+        $inseriu = Yii::$app->db->createCommand()->batchInsert(
+            'titles', 
+            ['emp_no', 'title', 'from_date', 'to_date'], 
+            $array_save
+        )->execute();
+
+        return $inseriu;
+    }
     /**
      * @return \yii\db\ActiveQuery
      */

@@ -27,6 +27,15 @@ class Employee extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    //atributos para criação de campos relacionados (insert e update)
+    public $department_create;
+    public $department_from;
+    public $department_to;
+    public $actual_job;
+    public $title_create;
+    public $title_from;
+    public $title_to;
+    
     public static function tableName()
     {
         return 'employees';
@@ -59,7 +68,7 @@ class Employee extends \yii\db\ActiveRecord
             'first_name' => 'Primeiro Nome',
             'last_name' => 'Último Nome',
             'gender' => 'Gênero',
-            'hire_date' => 'Data de Contrataão',
+            'hire_date' => 'Data de Contratação',
             'fullName' => 'Nome completo'
         ];
     }
@@ -74,6 +83,19 @@ class Employee extends \yii\db\ActiveRecord
         $this->birth_date = DateHelper::toBrazilian($this->birth_date);
         $this->hire_date = DateHelper::toBrazilian($this->hire_date);
         $this->gender = Yii::$app->params['gender'][$this->gender];
+    }
+
+    /**
+     * este método será chamado antes de um registro ser salvo (inserido/atualizado)
+     * @param $insert parâmetro retorno do Yii2
+     * @return type
+     */
+    public function beforeSave($insert)
+    {
+        $this->birth_date = DateHelper::toAmerican($this->birth_date);
+        $this->hire_date  = DateHelper::toAmerican($this->hire_date);
+
+        return true;
     }
 
     /**
@@ -93,6 +115,18 @@ class Employee extends \yii\db\ActiveRecord
         $strManager = substr(trim($strManager), 0, -1);
         
         return $strManager;
+    }
+
+    /**
+     * retorna o próximo id da tabela
+     * utilizado pela impossibilidade de colocar auto_increment na tabela
+     * @return void
+     */
+    public function getNextId()
+    {
+        $max_id = self::find()->max('emp_no');
+        $max_id++;
+        $this->emp_no = $max_id;
     }
 
     /**
