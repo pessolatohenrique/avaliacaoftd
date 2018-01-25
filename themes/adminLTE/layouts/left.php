@@ -23,9 +23,8 @@ $foto_perfil = "http://www.amigoviajante.com.br/img/usuario-sem-foto.png";
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
                     ['label' => 'Administrador', 'options' => ['class' => 'header']],
-                    ['label' => 'Colaboradores', 'icon' => 'users', 'url' => ['/employee']],
-                    ['label' => 'Item 02', 'icon' => 'users', 'url' => ['#']]
-
+                    ['label' => 'Dashboard', 'icon' => 'users', 'url' => ['/']],
+                    ['label' => 'Colaboradores', 'icon' => 'users', 'url' => ['/employee']]
                 ],
             ]
         ) ?>

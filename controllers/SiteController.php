@@ -13,6 +13,7 @@ use app\models\User;
 use app\models\SignupForm;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
+use app\models\EmployeeSearch;
 
 class SiteController extends Controller
 {
@@ -88,9 +89,12 @@ class SiteController extends Controller
         if(Yii::$app->user->isGuest){
             return $this->redirect(['site/login']);
         }else{
-            $model = new User();
-            return $this->render('index',[
-                'model' => $model
+            $searchModel = new EmployeeSearch();
+            $dataProvider = $searchModel->searchBirthday(Yii::$app->request->queryParams);
+
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider
             ]);
         }
         

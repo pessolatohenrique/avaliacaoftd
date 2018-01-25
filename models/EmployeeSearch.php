@@ -100,4 +100,37 @@ class EmployeeSearch extends Employee
 
         return $query;
     }
+
+    /**
+     * realiza a busca dos aniversariantes do dia
+     * @return type
+     */
+    public function searchBirthday($params)
+    {
+        $query = Employee::find()->innerJoinWith('deptEmps');
+
+        // add conditions that should always apply here
+        $query->andFilterWhere(['MONTH(birth_date)' => date("m")]);
+        $query->andFilterWhere(['DAY(birth_date)' => date("d")]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort' => [
+                'attributes' => [
+                    'first_name'
+                ],
+                'defaultOrder' => [
+                    'first_name' => SORT_ASC
+                ]
+            ]
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        return $dataProvider;
+    }
 }
