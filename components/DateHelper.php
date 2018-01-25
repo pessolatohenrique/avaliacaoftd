@@ -11,8 +11,13 @@ class DateHelper
 	 */
 	public static function toAmerican($dateBrazilian)
 	{
-		$date_explode = explode("/", $dateBrazilian);
-		$date_american = $date_explode[2]."-".$date_explode[1]."-".$date_explode[0];
+		$date_american = "";
+		
+		if (strlen($dateBrazilian) == 10) {
+			$date_explode = explode("/", $dateBrazilian);
+			$date_american = $date_explode[2]."-".$date_explode[1]."-".$date_explode[0];
+		}
+
 		return $date_american;
 	}
 
